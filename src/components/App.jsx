@@ -1,7 +1,9 @@
 import { Component } from 'react';
-import axios from 'axios';
+import { Blocks } from 'react-loader-spinner';
+import styles from './app.module.css';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Searchbar from './Searchbar/Searchbar';
+import getPictures from 'api/api';
 
 class App extends Component {
   state = {
@@ -10,33 +12,61 @@ class App extends Component {
     search: '',
     loading: false,
     error: null,
+    page: 1,
   };
 
   handleSearch = search => {
-    this.setState({ search });
+    this.setState({ search: search.searchWord, page: 1, pictures: [] });
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const { search } = this.state;
-    if (prevState.search !== search) {
+    const { search, page, pictures } = this.state;
+    if (prevState.search !== search || prevState.page !== page) {
       this.setState({ loading: true });
-      axios
-        .get(
-          `https://pixabay.com/api/?q=${search}&page=1&key=31877726-de77d5eff1f0b572f2213dfa6&image_type=photo&orientation=horizontal&per_page=12`
-        )
-        .then(response => this.setState({ pictures: response.data.hits }))
+      getPictures(search, page)
+        .then(response => {
+          this.setState(prevState => ({
+            pictures: [...pictures, ...response.hits],
+          }));
+        })
         .catch(error => this.setState({ error: error.message }))
         .finally(() => this.setState({ loading: false }));
     }
   }
 
+  getMorePictures = () => {
+    this.setState(({ page }) => ({ page: page + 1 }));
+  };
+
   render() {
+    const { pictures, error, loading } = this.state;
+    const loadingSpiner = (
+      <div className={styles.loading}>
+        <Blocks
+          visible={true}
+          height="80"
+          width="80"
+          ariaLabel="blocks-loading"
+          wrapperClass="blocks-wrapper"
+        />
+        <p>Loading, please wait</p>
+      </div>
+    );
     return (
-      <div>
+      <div className={styles.App}>
         <Searchbar onSubmit={this.handleSearch} />
-        <ImageGallery pictures={this.state.pictures} />
-        {this.state.loading && <p>...Loading</p>}
-        {this.state.error && <p>{this.state.error}</p>}
+        <ImageGallery pictures={pictures} />
+        {loading && loadingSpiner}
+        {error && <p>{error}</p>}
+        {pictures.length > 0 && (
+          <button
+            className={styles.button}
+            type="button"
+            onClick={this.getMorePictures}
+          >
+            Load more.
+          </button>
+        )}
       </div>
     );
   }

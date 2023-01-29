@@ -4,7 +4,7 @@ import ImageGalleryItem from './ImageGalleryItem';
 
 function ImageGallery({ pictures }) {
   const list = pictures.map(item => (
-    <ImageGalleryItem id={item.id} url={item.webformatURL} title={item.title} />
+    <ImageGalleryItem key={item.id} url={item.webformatURL} title={item.tags} />
   ));
   return <ul className={styles.ImageGallery}>{list}</ul>;
 }
@@ -16,9 +16,9 @@ ImageGallery.defaultProps = { pictures: [] };
 ImageGallery.propTypes = {
   pictures: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      url: PropTypes.string.isRequired,
-      title: PropTypes.string.isRequired,
+      id: PropTypes.number.isRequired,
+      webformatURL: PropTypes.string.isRequired,
+      tags: PropTypes.string.isRequired,
     })
   ),
 };
