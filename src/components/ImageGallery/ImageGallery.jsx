@@ -2,9 +2,14 @@ import PropTypes from 'prop-types';
 import styles from './imageGallery.module.css';
 import ImageGalleryItem from './ImageGalleryItem';
 
-function ImageGallery({ pictures }) {
+function ImageGallery({ pictures, showPicture }) {
   const list = pictures.map(item => (
-    <ImageGalleryItem key={item.id} url={item.webformatURL} title={item.tags} />
+    <ImageGalleryItem
+      key={item.id}
+      url={item.webformatURL}
+      title={item.tags}
+      onClick={() => showPicture(item.largeImageURL)}
+    />
   ));
   return <ul className={styles.ImageGallery}>{list}</ul>;
 }
@@ -21,4 +26,5 @@ ImageGallery.propTypes = {
       tags: PropTypes.string.isRequired,
     })
   ),
+  showPicture: PropTypes.func.isRequired,
 };

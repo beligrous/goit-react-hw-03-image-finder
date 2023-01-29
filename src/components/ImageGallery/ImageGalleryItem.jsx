@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import styles from './imageGalleryItem.module.css';
 
-function ImageGalleryItem({ url, title }) {
+function ImageGalleryItem({ url, title, onClick }) {
   return (
-    <li className={styles.ImageGalleryItem}>
+    <li className={styles.ImageGalleryItem} onClick={onClick}>
       <img className={styles.ImageGalleryItemImage} src={url} alt={title} />
     </li>
   );
