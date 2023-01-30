@@ -16,16 +16,20 @@ class App extends Component {
     finish: false,
     showModal: false,
     imageURL: '',
+    searchButtonDisabled: false,
   };
 
-  handleSearch = search => {
-    this.setState({ search: search.searchWord, page: 1, pictures: [] });
+  handleSearch = ({ searchWord }) => {
+    const { search } = this.state;
+    if (search !== searchWord) {
+      this.setState({ search: searchWord, page: 1, pictures: [] });
+    }
   };
 
   componentDidUpdate(prevProps, prevState) {
     const { search, page, pictures } = this.state;
     if (prevState.search !== search || prevState.page !== page) {
-      this.setState({ loading: true });
+      this.setState({ loading: true, searchButtonDisabled: true });
       getPictures(search, page)
         .then(response => {
           if (response.totalHits === pictures.length) {
@@ -36,7 +40,9 @@ class App extends Component {
           }));
         })
         .catch(error => this.setState({ error: error.message }))
-        .finally(() => this.setState({ loading: false }));
+        .finally(() =>
+          this.setState({ loading: false, searchButtonDisabled: false })
+        );
     }
   }
 
@@ -53,8 +59,15 @@ class App extends Component {
   };
 
   render() {
-    const { pictures, error, loading, finish, showModal, imageURL } =
-      this.state;
+    const {
+      pictures,
+      error,
+      loading,
+      finish,
+      showModal,
+      imageURL,
+      searchButtonDisabled,
+    } = this.state;
     const loadingSpiner = (
       <div className={styles.loading}>
         <Blocks
@@ -69,7 +82,10 @@ class App extends Component {
     );
     return (
       <div className={styles.App}>
-        <Searchbar onSubmit={this.handleSearch} />
+        <Searchbar
+          onSubmit={this.handleSearch}
+          disabled={searchButtonDisabled}
+        />
         <ImageGallery pictures={pictures} showPicture={this.handlePicture} />
         {loading && loadingSpiner}
         {error && <p>{error}</p>}

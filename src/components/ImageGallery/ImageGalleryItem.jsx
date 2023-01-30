@@ -14,4 +14,5 @@ export default ImageGalleryItem;
 ImageGalleryItem.propTypes = {
   url: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
 };

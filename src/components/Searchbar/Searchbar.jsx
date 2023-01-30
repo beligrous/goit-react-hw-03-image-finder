@@ -11,18 +11,19 @@ class Searchbar extends Component {
   handleSubmit = e => {
     e.preventDefault();
     this.props.onSubmit({ ...this.state });
-    this.reset();
   };
 
-  reset() {
-    this.setState({ searchWord: '' });
-  }
-
   render() {
+    const { disabled } = this.props;
+
     return (
       <header className={styles.Searchbar}>
         <form onSubmit={this.handleSubmit} className={styles.SearchForm}>
-          <button type="submit" className={styles.SearchFormButton}>
+          <button
+            type="submit"
+            disabled={disabled}
+            className={styles.SearchFormButton}
+          >
             <span className={styles.SearchFormButtonLabel}>Search</span>
           </button>
 
@@ -44,5 +45,6 @@ class Searchbar extends Component {
 export default Searchbar;
 
 Searchbar.propTypes = {
+  disabled: PropTypes.string.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
