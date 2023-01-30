@@ -14,8 +14,8 @@ class Modal extends Component {
     document.removeEventListener('keydown', this.handleClose);
   }
 
-  handleClose = e => {
-    if (e.target === e.currentTarget || e.code === 'Escape') {
+  handleClose = ({ target, currentTarget, code }) => {
+    if (target === currentTarget || code === 'Escape') {
       this.props.onClose();
     }
   };
