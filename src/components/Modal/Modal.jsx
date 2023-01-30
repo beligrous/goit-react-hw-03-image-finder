@@ -6,8 +6,16 @@ import styles from './modal.module.css';
 const modalRoot = document.querySelector('#modal-root');
 
 class Modal extends Component {
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleClose);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleClose);
+  }
+
   handleClose = e => {
-    if (e.target === e.currentTarget) {
+    if (e.target === e.currentTarget || e.code === 'Escape') {
       this.props.onClose();
     }
   };
