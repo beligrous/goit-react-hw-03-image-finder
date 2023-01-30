@@ -48,6 +48,10 @@ class App extends Component {
     this.setState({ showModal: true, imageURL: url });
   };
 
+  closeModal = () => {
+    this.setState({ showModal: false, imageURL: '' });
+  };
+
   render() {
     const { pictures, error, loading, finish, showModal, imageURL } =
       this.state;
@@ -79,7 +83,7 @@ class App extends Component {
           </button>
         )}
         {showModal && (
-          <Modal>
+          <Modal onClose={this.closeModal}>
             <img src={imageURL} alt="big" />
           </Modal>
         )}
